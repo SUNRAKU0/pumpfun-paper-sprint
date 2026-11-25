@@ -148,8 +148,9 @@ export function createMomentumBot(overrides: Partial<MomentumParams> = {}): Bot 
         if (note.entryVq === null || note.entryVt === null) continue;
         const curVq = curve.virtual_quote_reserves;
         const curVt = curve.virtual_token_reserves;
-        const targetBps = p.mode === 'dip' ? p.bounceBps : p.takeProfitBps;
-        const tookProfit = upByAtLeast(curVq, curVt, note.entryVq, note.entryVt, targetBps);
+        // Once the ride has paid for itself, bank it — the curve rarely gives a second gift.
+        const exitTargetBps = p.mode === 'dip' ? p.bounceBps : p.takeProfitBps;
+        const tookProfit = upByAtLeast(curVq, curVt, note.entryVq, note.entryVt, exitTargetBps);
         const stoppedOut = downByAtLeast(curVq, curVt, note.entryVq, note.entryVt, p.stopLossBps);
         const tooOld = state.slot - note.entrySlot > p.maxHoldSlots;
         if (tookProfit || stoppedOut || tooOld) {
