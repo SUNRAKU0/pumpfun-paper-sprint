@@ -164,6 +164,7 @@ export function createMomentumBot(overrides: Partial<MomentumParams> = {}): Bot 
         }
       }
 
+// A buy bets the crowd is still arriving, not that the coin is worth anything.
       // Entries: one buy per coin, only while a position slot and cash are free.
       let free = state.freeCashLamports();
       let slots = caps.max_open_positions - state.committedPositionCount();
